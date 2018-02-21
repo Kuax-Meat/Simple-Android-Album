@@ -3,10 +3,12 @@ package org.kuax.simalb;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,10 +37,10 @@ public class FolderViewActivity extends AppCompatActivity {
         grid.setAdapter(adapter);
         */
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        //LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        GridLayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 2, GridLayoutManager.VERTICAL, false);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
-
         recyclerView.setAdapter(new RecyclerAdapter(getApplicationContext(), bName, uris, R.layout.activity_folder_view));
         Log.println(Log.DEBUG, "FolderViewActivity.java", "This is FolderViewActivity.java");
     }

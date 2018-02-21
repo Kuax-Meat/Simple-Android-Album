@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -38,19 +39,26 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.folder_cardview_item, null);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.folder_cardview_item, parent, false);
         return new ViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(RecyclerAdapter.ViewHolder holder, int position) {
-        //Bitmap bmp = BitmapFactory.decodeFile(uris.get(position).toString());
-        //int dimension = getSquareCropDimensionForBitmap(bmp);
-        //bmp = ThumbnailUtils.extractThumbnail(bmp, dimension, dimension);
-        Drawable drawable = Drawable.createFromPath(uris.get(position).toString());
-        //Drawable d = new BitmapDrawable(null, bmp);
-        holder.image.setBackground(drawable);
+        Bitmap bmp = BitmapFactory.decodeFile(uris.get(position).toString());
+        bmp = ThumbnailUtils.extractThumbnail(bmp, 600, 600);
+        int dimension = getSquareCropDimensionForBitmap(bmp);
+        Drawable d = new BitmapDrawable(null, bmp);
+        //Drawable drawable = Drawable.createFromPath(uris.get(position).toString());
+        holder.image.setImageDrawable(d);
+        //holder.image.setBackground(drawable);
         holder.title.setText(bName.get(position));
+        holder.cardview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(c, bName.get(position), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -71,8 +79,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         }
     }
 
-
-    public int getSquareCropDimensionForBitmap(Bitmap bitmap)
+    private int getSquareCropDimensionForBitmap(Bitmap bitmap)
     {
         //use the smallest dimension of the image to crop to
         return Math.min(bitmap.getWidth(), bitmap.getHeight());
