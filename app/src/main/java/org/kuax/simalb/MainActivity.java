@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -28,8 +29,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
+        //setContentView(R.layout.activity_main);
         /* Check Permissions */
         if (PermissionUtil.isStoragePermissionsGranted(this)) {
             initialize();
@@ -40,7 +40,8 @@ public class MainActivity extends AppCompatActivity {
 
     private List<Uri> fetchAllImages() {
         String tmp = "";
-        // DATA는 이미지 파일의 스트림 데이터 경로를 나타냅니다.
+        /* Order By Bucket ID */
+        String orderBy = MediaStore.Video.Media.BUCKET_ID;
         String[] projection = {
                 MediaStore.Images.Media.DATA,
                 MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
@@ -48,11 +49,11 @@ public class MainActivity extends AppCompatActivity {
         };
 
         Cursor imageCursor = getBaseContext().getContentResolver().query(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, // 이미지 컨텐트 테이블
-                projection, // DATA를 출력
-                null,       // 모든 개체 출력
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                projection,
                 null,
-                null);      // 정렬 안 함
+                null,
+                MediaStore.Images.Media.BUCKET_ID);
 
         ArrayList<Uri> result = new ArrayList<>(imageCursor.getCount());
         buckets = new ArrayList<>(imageCursor.getCount());
@@ -129,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
         }
         intent.putStringArrayListExtra("ImageURIs", (ArrayList<String>) uris_string);
         this.startActivity(intent);
-
+        finish();
         /*
         ImageAdapter ia= new ImageAdapter(this, uris);
         GridView gv = (GridView)findViewById(R.id.gridview);

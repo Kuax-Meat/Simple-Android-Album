@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <!-- A RecyclerView with some commonly used attributes -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="200dp">
+
     <!-- A CardView that contains a TextView -->
     <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/card_view"
@@ -34,12 +36,14 @@
                 android:id="@+id/nameTxt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
                 android:layout_alignBottom="@+id/folderCover"
+                android:layout_alignParentLeft="true"
                 android:background="#CCFFFFFF"
                 android:padding="8dp"
                 android:text="Name"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:textAppearance="@style/FolderCover"
+                android:textStyle="bold" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
+
 </LinearLayout>

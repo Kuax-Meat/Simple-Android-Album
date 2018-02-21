@@ -1,16 +1,16 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="S.Album.Action" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:colorPrimary">#00ab35</item>
+        <item name="android:colorPrimaryDark">#00992f</item>
+        <item name="android:colorAccent">@color/colorAccent</item>
     </style>
 
     <style name="CustomTheme" parent="Theme.AppCompat.Light.NoActionBar" />
 
-    <style name="CustomTheme2" parent="AppTheme" >
+    <style name="CustomTheme2" parent="S.Album.Action" >
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
     </style>
 
@@ -18,4 +18,9 @@
 
     <style name="SimpleAlbum" parent="android:Theme.Material" />
 
+    <style name="S.Album.ActionBar.TextAppearance" parent="android:TextAppearance">
+        <item name="android:fontFamily">@font/nanumsquarer</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textSize">32sp</item>
+    </style>
 </resources>
