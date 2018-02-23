@@ -19,7 +19,8 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/folderCover"
             android:layout_alignParentLeft="true"
-            android:padding="8dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
             android:text="@string/app_name"
             android:textAppearance="@style/Toolbar_Header"
             android:textStyle="bold" />

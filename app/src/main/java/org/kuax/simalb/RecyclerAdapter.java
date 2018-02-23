@@ -18,6 +18,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.kuax.simalb.util.MediaStoreQuery;
+
 import java.util.List;
 
 /**
@@ -26,13 +28,15 @@ import java.util.List;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
     List<String> bName;
+    List<String> bIDs;
     List<Uri> uris;
     Context c;
     int item_layout;
 
-    RecyclerAdapter(Context context, List<String> bName, List<Uri> URIs, int item_layout) {
+    RecyclerAdapter(Context context, List<Uri> URIs, List<String> bName, List<String> bIDs, int item_layout) {
         this.c = context;
         this.bName = bName;
+        this.bIDs = bIDs;
         this.uris = URIs;
         this.item_layout = item_layout;
     }
@@ -52,7 +56,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         //Drawable drawable = Drawable.createFromPath(uris.get(position).toString());
         holder.image.setImageDrawable(d);
         //holder.image.setBackground(drawable);
-        holder.title.setText(bName.get(position));
+        holder.title.setText(bName.get(position) + " " + MediaStoreQuery.getCount(c, bIDs.get(position)));
         holder.cardview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

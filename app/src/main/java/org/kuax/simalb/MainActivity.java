@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.kuax.simalb.util.MediaStoreQuery;
 import org.kuax.simalb.util.PermissionUtil;
 
 import java.util.ArrayList;
@@ -23,75 +24,20 @@ public class MainActivity extends AppCompatActivity {
     private List<String> uris_string;
     private List<String> buckets;
     private List<String> bIDs;
-    //private int[] count = new int[50];
+
     private int EXTERNAL_STORAGE_PERMISSIONS = 12;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_main);
+
         /* Check Permissions */
         if (PermissionUtil.isStoragePermissionsGranted(this)) {
             initialize();
         } else {
             PermissionUtil.requestPermissions(this, EXTERNAL_STORAGE_PERMISSIONS, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE);
         }
-    }
-
-    private List<Uri> fetchAllImages() {
-        String tmp = "";
-        /* Order By Bucket ID */
-        String orderBy = MediaStore.Video.Media.BUCKET_ID;
-        String[] projection = {
-                MediaStore.Images.Media.DATA,
-                MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
-                MediaStore.Images.Media.BUCKET_ID
-        };
-
-        Cursor imageCursor = getBaseContext().getContentResolver().query(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                projection,
-                null,
-                null,
-                MediaStore.Images.Media.BUCKET_ID);
-
-        ArrayList<Uri> result = new ArrayList<>(imageCursor.getCount());
-        buckets = new ArrayList<>(imageCursor.getCount());
-        bIDs = new ArrayList<>(imageCursor.getCount());
-        int dataColumnIndex = imageCursor.getColumnIndex(projection[0]);
-        int bnColumnIndex = imageCursor.getColumnIndex(projection[1]);
-        int bid = imageCursor.getColumnIndex(projection[2]);
-        //Log.println(Log.DEBUG, "HELLO", projection[1]);
-
-        int i = -1;
-        if (imageCursor == null) {
-            // Error 발생
-            // 적절하게 handling 해주세요
-        } else if (imageCursor.moveToFirst()) {
-            do {
-                String filePath = imageCursor.getString(dataColumnIndex);
-                String bucket = imageCursor.getString(bnColumnIndex);
-                String bID = imageCursor.getString(bid);
-                if (!tmp.equals(bID)) {
-                    tmp = bID;
-                    i++;
-                }
-                /*
-                count[i]++;
-                */
-                //Log.println(Log.DEBUG, "HELLO", imageCursor.getString(bnColumnIndex));
-                Uri imageUri = Uri.parse(filePath);
-                result.add(imageUri);
-                buckets.add(bucket);
-                bIDs.add(bID);
-
-            } while(imageCursor.moveToNext());
-        } else {
-            // imageCursor가 비었습니다.
-        }
-        imageCursor.close();
-
-        return result;
     }
 
     public void initialize() {
@@ -123,12 +69,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Intent intent = new Intent(this, FolderViewActivity.class);
+        /*
         intent.putStringArrayListExtra("BucketName", (ArrayList<String>) t_bName);
         uris_string = new ArrayList<String>();
         for (int i = 0; i < t_Uris.size(); i++) {
             uris_string.add(t_Uris.get(i).toString());
         }
         intent.putStringArrayListExtra("ImageURIs", (ArrayList<String>) uris_string);
+        */
         this.startActivity(intent);
         finish();
         /*
@@ -139,7 +87,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void query() {
-        uris = fetchAllImages();
+        List<List<String>> tmp = MediaStoreQuery.fetchAllImages(getBaseContext());
+        uris = new ArrayList<>(tmp.get(0).size());
+        buckets = new ArrayList<>(tmp.get(0).size());
+        bIDs = new ArrayList<>(tmp.get(0).size());
+
+        for (int i = 0; i < tmp.get(0).size(); i++) {
+            uris.add(Uri.parse(tmp.get(0).get(i)));
+            buckets.add(tmp.get(1).get(i));
+            bIDs.add(tmp.get(2).get(i));
+        }
     }
 
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
@@ -162,26 +119,4 @@ public class MainActivity extends AppCompatActivity {
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
-
-    /* Deprecated
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case 1: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    final List<Uri> uris = fetchAllImages();
-                    Log.println(Log.DEBUG, "hello", uris.get(0).toString());
-
-                    //ImageView imgView = (ImageView) findViewById(R.id.imageView3);
-                    //imgView.setImageURI(Uri.parse(uris.get(0).toString()));
-
-                    ImageAdapter ia= new ImageAdapter(this, uris);
-                    GridView gv = (GridView)findViewById(R.id.gridview);
-                    gv.setAdapter(ia);
-                } else {
-
-                }
-                return;
-            }
-        }
-    } */
 }
