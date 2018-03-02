@@ -143,4 +143,46 @@ public class MediaStoreQuery {
         result.add(bIDs);
         return result;
     }
+
+    public static List<Uri> getImagesbyBID(Context c, String bID) {
+        //List<String> iURIs;
+        String tmp = "";
+        String[] mClause = { bID };
+
+        /* Order By Bucket ID */
+        String orderBy = MediaStore.Video.Media.BUCKET_ID;
+        String[] projection = {
+                MediaStore.Images.Media.DATA,
+                MediaStore.Images.Media.BUCKET_ID
+        };
+
+        Cursor imageCursor = c.getContentResolver().query(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                projection,
+                MediaStore.Images.Media.BUCKET_ID + " = ?",
+                mClause,
+                MediaStore.Images.Media.DATE_MODIFIED + " DESC");
+
+        ArrayList<Uri> result = new ArrayList<>(imageCursor.getCount());
+        //iURIs = new ArrayList<>(imageCursor.getCount());
+        int dataColumnIndex = imageCursor.getColumnIndex(projection[0]);
+
+        int i = -1;
+        if (imageCursor == null) {
+
+        } else if (imageCursor.moveToFirst()) {
+            do {
+                String filePath = imageCursor.getString(dataColumnIndex);
+                Uri imageUri = Uri.parse(filePath);
+                //iURIs.add(filePath);
+                result.add(imageUri);
+
+            } while(imageCursor.moveToNext());
+        } else {
+
+        }
+        imageCursor.close();
+
+        return result;
+    }
 }
