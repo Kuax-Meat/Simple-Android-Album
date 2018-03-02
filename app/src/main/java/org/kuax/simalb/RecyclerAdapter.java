@@ -1,6 +1,7 @@
 package org.kuax.simalb;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -50,24 +51,37 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     @Override
     public void onBindViewHolder(RecyclerAdapter.ViewHolder holder, int position) {
         Bitmap bmp = BitmapFactory.decodeFile(uris.get(position).toString());
-        bmp = ThumbnailUtils.extractThumbnail(bmp, 600, 600);
+        bmp = ThumbnailUtils.extractThumbnail(bmp, 200, 200);
         int dimension = getSquareCropDimensionForBitmap(bmp);
         Drawable d = new BitmapDrawable(null, bmp);
         //Drawable drawable = Drawable.createFromPath(uris.get(position).toString());
         holder.image.setImageDrawable(d);
         //holder.image.setBackground(drawable);
         holder.title.setText(bName.get(position) + " " + MediaStoreQuery.getCount(c, bIDs.get(position)));
-        holder.cardview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(c, bName.get(position), Toast.LENGTH_SHORT).show();
-            }
-        });
+        ClickListener cl = new ClickListener(c, bIDs.get(position));
+        holder.cardview.setOnClickListener(cl);
     }
 
     @Override
     public int getItemCount() {
         return this.bName.size();
+    }
+
+    public class ClickListener implements View.OnClickListener {
+        Context x;
+        String bID;
+
+        public ClickListener(Context t, String tbID) {
+            x = t;
+            bID = tbID;
+        }
+
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent(x, ContentActivity.class);
+            intent.putExtra("BucketID", bID);
+            x.startActivity(intent);
+        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
